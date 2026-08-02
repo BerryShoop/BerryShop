@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catálogo — Berry Shop</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="header">
+  <div class="wrap header-row">
+    <a href="index.html" class="logo" aria-label="Berry Shop">
+      <img src="assets/logo.png" alt="Berry Shop">
+    </a>
+
+    <div class="header-search">
+      <div class="search-box">
+        <span>🔍</span>
+        <input id="catalogSearch" type="text" placeholder="Buscar productos...">
+      </div>
+    </div>
+
+    <button class="cart-btn" onclick="openCart()">
+      🛍️ Carrito
+      <span class="cart-badge" id="cartBadge">0</span>
+    </button>
+
+    <button class="mobile-cart" onclick="openCart()">
+      🛍️
+    </button>
+  </div>
+
+  <nav class="header-nav" id="mobileMenu">
+      <a href="catalogo.html?cat=maquillaje">Maquillaje</a>
+      <a href="catalogo.html?cat=perfumes">Perfumes</a>
+      <a href="catalogo.html?cat=joyeria">Joyería</a>
+  </nav>
+</header>
+
+<!-- ================= HERO SIMPLE ================= -->
+<section class="hero">
+  <div class="wrap">
+    <h1>Nuestro Catálogo ✨</h1>
+    <p>Todo lo que necesitas para realzar tu belleza, en un solo lugar.</p>
+  </div>
+</section>
+
+<!-- ================= CATÁLOGO ================= -->
+<section class="section bg-white">
+  <div class="wrap">
+
+    <!-- Barra de filtros principales -->
+    <div class="filter-tabs" role="tablist" aria-label="Filtrar por categoría">
+      <button class="filter-tab" data-cat="todos" onclick="filterCatalog('todos')">Todos</button>
+      <button class="filter-tab" data-cat="maquillaje" onclick="filterCatalog('maquillaje')">💄 Maquillaje</button>
+      <button class="filter-tab" data-cat="perfumes" onclick="filterCatalog('perfumes')">🌸 Perfumes</button>
+      <button class="filter-tab" data-cat="joyeria" onclick="filterCatalog('joyeria')">✨ Joyería</button>
+    </div>
+
+    <!-- Filtros secundarios dinámicos por tipo de producto -->
+    <div class="filter-subgroup" id="subfilterContainer" aria-label="Filtrar por tipo de producto"></div>
+
+    <!-- Grilla de productos (poblada por JS vía renderCatalog / filterCatalog) -->
+    <div class="grid-12" id="catalogGrid" style="margin-top:26px;"></div>
+    <div class="catalog-pagination" id="catalogPagination" aria-label="Paginación del catálogo"></div>
+
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+<div class="wrap footer-grid">
+    <div>
+    <h4>Berry Shop</h4>
+    <p>Tu tienda de confianza en maquillaje, perfumes y joyería fina. Piezas seleccionadas para realzar tu belleza natural.</p>
+    </div>
+    <div>
+    <h4>Categorías</h4>
+    <ul>
+        <li><a href="#maquillajes">Maquillaje</a></li>
+        <li><a href="#perfumes">Perfumes</a></li>
+        <li><a href="#joyeria">Joyería</a></li>
+    </ul>
+    </div>
+    <div>
+    <h4>Ayuda</h4>
+    <ul>
+        <li><a href="https://wa.me/523921368108?text=Hola%20Berry%20Shop%2C%20quiero%20informaci%C3%B3n%20sobre%20sus%20productos" target="_blank" rel="noreferrer noopener">Contacto</a></li>
+    </ul>
+    </div>
+    <div>
+    <h4>Pedidos y Envíos</h4>
+    <div class="whatsapp-note">
+        <span>📱</span>
+        <span>Todos los pedidos se finalizan y envían directamente por WhatsApp al número 392-136-8108. Atención personalizada de lunes a sábado.</span>
+    </div>
+    </div>
+</div>
+<div class="wrap footer-bottom">
+    <span>© 2026 Berry Shop. Todos los derechos reservados.</span>
+    <span>Hecho con 💜 para nuestras clientas</span>
+</div>
+</footer>
+
+<!-- ================= CART DRAWER ================= -->
+<div class="overlay" id="overlay" onclick="closeCart()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <h3>Tu Carrito ✨</h3>
+    <button class="drawer-close" onclick="closeCart()">✕</button>
+  </div>
+  <div class="drawer-items" id="drawerItems">
+    <div class="drawer-empty">Tu carrito está vacío.<br>Agrega productos para comenzar tu pedido.</div>
+  </div>
+  <div class="drawer-foot">
+    <div class="drawer-total-row">
+      <span>Total</span>
+      <span id="drawerTotal">$0</span>
+    </div>
+    <button class="wa-btn" id="waBtn" disabled onclick="sendToWhatsapp()">
+      Pedir por WhatsApp 📱
+    </button>
+  </div>
+</div>
+<!-- Módulos de Firebase y Firestore -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-app.js";
+  import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDFBBY3l2mEuJ1UQ8Z95t10eQnG_IOUvv4",
+    authDomain: "berryshop-3e310.firebaseapp.com",
+    projectId: "berryshop-3e310",
+    storageBucket: "berryshop-3e310.firebasestorage.app",
+    messagingSenderId: "480752850341",
+    appId: "1:480752850341:web:fa13109fd68345c795044c"
+  };
+
+  // Inicializar Firebase y Firestore
+  const app = initializeApp(firebaseConfig);
+  window.db = getFirestore(app);
+  window.firestoreTools = { collection, getDocs };
+</script>
+
+<!-- Tu script principal -->
+<script src="js/script.js"></script>
+</body>
+</html>

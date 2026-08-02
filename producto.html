@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Producto — Berry Shop</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="header">
+  <div class="wrap header-row">
+    <a href="index.html" class="logo" aria-label="Berry Shop">
+      <img src="assets/logo.png" alt="Berry Shop">
+    </a>
+
+    <div class="header-search">
+      <div class="search-box">
+        <span>🔍</span>
+        <input type="text" placeholder="Buscar productos...">
+      </div>
+    </div>
+
+    <button class="cart-btn" onclick="openCart()">
+      🛍️ Carrito
+      <span class="cart-badge" id="cartBadge">0</span>
+    </button>
+
+    <button class="mobile-cart" onclick="openCart()">
+      🛍️
+    </button>
+
+    <button class="mobile-menu" onclick="toggleMenu()">
+      ☰
+    </button>
+  </div>
+
+  <nav class="header-nav" id="mobileMenu">
+      <a href="catalogo.html?cat=maquillaje">Maquillaje</a>
+      <a href="catalogo.html?cat=perfumes">Perfumes</a>
+      <a href="catalogo.html?cat=joyeria">Joyería</a>
+  </nav>
+</header>
+
+<!-- ================= BREADCRUMBS ================= -->
+<div class="wrap">
+  <div class="breadcrumbs">
+    <a href="index.html">Inicio</a>
+    <span class="sep">›</span>
+    <a href="catalogo.html" id="breadcrumbCat">Categoría</a>
+    <span class="sep">›</span>
+    <span class="current">Cargando producto...</span>
+  </div>
+</div>
+
+<!-- ================= PRODUCT MAIN ================= -->
+<div class="wrap product-main">
+
+  <!-- Columna Izquierda: Galería -->
+  <div class="product-gallery">
+    <div class="gallery-main" id="galleryMain">Imagen del producto</div>
+    <div class="gallery-thumbs">
+      <div class="thumb active">Foto 1</div>
+      <div class="thumb">Foto 2</div>
+      <div class="thumb">Foto 3</div>
+    </div>
+  </div>
+
+  <!-- Columna Derecha: Información -->
+  <div class="product-info">
+    <div class="product-cat">Categoría</div>
+    <h1 class="product-name">Cargando...</h1>
+    <p class="product-price">$0 MXN</p>
+
+    <div class="qty-selector">
+      <span class="qty-label">Cantidad</span>
+      <div class="qty-box">
+        <button onclick="changeProductQty(-1)">−</button>
+        <span id="productQty">1</span>
+        <button onclick="changeProductQty(1)">+</button>
+      </div>
+    </div>
+
+    <div class="product-actions">
+      <button class="btn-add-cart">
+        🛒 Agregar al Carrito
+      </button>
+      <button class="btn-buy-whatsapp">
+        Comprar por WhatsApp 📱
+      </button>
+    </div>
+
+    <div class="product-description">
+      <h3>Descripción del Producto</h3>
+      <p>Cargando información del producto...</p>
+      <ul>
+        <li><strong>Garantía:</strong> Producto 100% original</li>
+        <li><strong>Envío:</strong> Coordinado vía WhatsApp</li>
+        <li><strong>Calidad:</strong> Alta durabilidad y excelentes materiales</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ================= TAMBIÉN TE PODRÍA GUSTAR ================= -->
+<section class="section bg-gray">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 class="section-title">También te podría gustar ✨</h2>
+    </div>
+    <div class="grid-12" id="grid-relacionados"></div>
+  </div>
+</section>
+
+<footer>
+<div class="wrap footer-grid">
+    <div>
+    <h4>Berry Shop</h4>
+    <p>Tu tienda de confianza en maquillaje, perfumes y joyería fina. Piezas seleccionadas para realzar tu belleza natural.</p>
+    </div>
+    <div>
+    <h4>Categorías</h4>
+    <ul>
+        <li><a href="#maquillajes">Maquillaje</a></li>
+        <li><a href="#perfumes">Perfumes</a></li>
+        <li><a href="#joyeria">Joyería</a></li>
+    </ul>
+    </div>
+    <div>
+    <h4>Ayuda</h4>
+    <ul>
+        <li><a href="https://wa.me/523921368108?text=Hola%20Berry%20Shop%2C%20quiero%20informaci%C3%B3n%20sobre%20sus%20productos" target="_blank" rel="noreferrer noopener">Contacto</a></li>
+    </ul>
+    </div>
+    <div>
+    <h4>Pedidos y Envíos</h4>
+    <div class="whatsapp-note">
+        <span>📱</span>
+        <span>Todos los pedidos se finalizan y envían directamente por WhatsApp al número 392-136-8108. Atención personalizada de lunes a sábado.</span>
+    </div>
+    </div>
+</div>
+<div class="wrap footer-bottom">
+    <span>© 2026 Berry Shop. Todos los derechos reservados.</span>
+    <span>Hecho con 💜 para nuestras clientas</span>
+</div>
+</footer>
+
+<!-- ================= CART DRAWER ================= -->
+<div class="overlay" id="overlay" onclick="closeCart()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <h3>Tu Carrito ✨</h3>
+    <button class="drawer-close" onclick="closeCart()">✕</button>
+  </div>
+  <div class="drawer-items" id="drawerItems">
+    <div class="drawer-empty">Tu carrito está vacío.<br>Agrega productos para comenzar tu pedido.</div>
+  </div>
+  <div class="drawer-foot">
+    <div class="drawer-total-row">
+      <span>Total</span>
+      <span id="drawerTotal">$0</span>
+    </div>
+    <button class="wa-btn" id="waBtn" disabled onclick="sendToWhatsapp()">
+      Pedir por WhatsApp 📱
+    </button>
+  </div>
+</div>
+
+<!-- Módulos de Firebase y Firestore -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-app.js";
+  import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDFBBY3l2mEuJ1UQ8Z95t10eQnG_IOUvv4",
+    authDomain: "berryshop-3e310.firebaseapp.com",
+    projectId: "berryshop-3e310",
+    storageBucket: "berryshop-3e310.firebasestorage.app",
+    messagingSenderId: "480752850341",
+    appId: "1:480752850341:web:fa13109fd68345c795044c"
+  };
+
+  // Inicializar Firebase y Firestore
+  const app = initializeApp(firebaseConfig);
+  window.db = getFirestore(app);
+  window.firestoreTools = { collection, getDocs };
+</script>
+
+<script src="js/script.js"></script>
+
+<script>
+  // Renderizar la sección "También te podría gustar" a partir de `catalogProducts` (Firestore)
+  function renderRelatedGrid() {
+    const gridRel = document.getElementById('grid-relacionados');
+    if (!gridRel) return;
+
+    const selected = JSON.parse(localStorage.getItem('joyeria_diana_selected') || '{}');
+    const all = Array.isArray(window.catalogProducts) ? window.catalogProducts : [];
+    const items = all.filter(p => p.name !== selected.name).slice(0, 4);
+
+    if (items.length === 0) {
+      gridRel.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: #666;">No hay productos relacionados.</div>';
+      return;
+    }
+
+    gridRel.innerHTML = items.map(item => `
+      <div class="card">
+        <a href="javascript:void(0)" onclick="goToProduct('${item.name.replace(/'/g, "\\'")}', ${item.price}, '${item.cat.replace(/'/g, "\\'")}', '${item.desc.replace(/'/g, "\\'")}', '${(item.image||'').replace(/'/g, "\\'")}', '${(item.image2||'').replace(/'/g, "\\'")}', '${(item.image3||'').replace(/'/g, "\\'")}')" class="card-img-link">
+          <div class="card-img"><img src="${item.image || ''}" alt="${item.name}" style="max-width:100%;max-height:220px;object-fit:contain;display:block;margin:0 auto;background:#fff;padding:6px;" onerror="this.style.display='none'"/></div>
+        </a>
+        <div class="card-body">
+          <div class="card-cat">${item.cat}</div>
+          <a href="javascript:void(0)" onclick="goToProduct('${item.name.replace(/'/g, "\\'")}', ${item.price}, '${item.cat.replace(/'/g, "\\'")}', '${item.desc.replace(/'/g, "\\'")}', '${(item.image||'').replace(/'/g, "\\'")}', '${(item.image2||'').replace(/'/g, "\\'")}', '${(item.image3||'').replace(/'/g, "\\'")}')" class="card-title-link">
+            <p class="card-name">${item.name}</p>
+          </a>
+          <p class="card-price">$${item.price}</p>
+          <button class="card-btn" onclick="addToCart('${item.name.replace(/'/g,"")}',${item.price})">Agregar Al Carrito</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  document.addEventListener('DOMContentLoaded', renderRelatedGrid);
+  document.addEventListener('catalogLoaded', renderRelatedGrid);
+</script>
+
+</body>
+</html>
